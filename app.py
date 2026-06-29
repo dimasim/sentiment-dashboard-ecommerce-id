@@ -54,14 +54,15 @@ CUSTOM_STOPWORDS = [
 ]
 
 
-@st.cache_data(show_spinner=False)
+@st.cache_data(show_spinner="Memuat data ulasan...")
 def load_dataset():
     """Memuat dataset ulasan dari file CSV."""
     try:
-        df = pd.read_csv("data/dataset_gabungan.csv")
+        df = pd.read_csv("data/dataset_gabungan.csv", low_memory=False)
         # Pastikan kolom yang diperlukan ada
         if 'app_name' not in df.columns or 'text' not in df.columns:
             return pd.DataFrame(columns=['app_name', 'text'])
+        df['app_name'] = df['app_name'].str.lower().str.strip()
         return df
     except Exception:
         return pd.DataFrame(columns=['app_name', 'text'])
@@ -70,6 +71,19 @@ def load_dataset():
 @st.cache_resource(show_spinner=False)
 def get_model():
     return load_or_train_model()
+
+
+@st.cache_data(show_spinner=False)
+def get_predictions_cached(app_name: str) -> list[tuple]:
+    """
+    Predict sentimen seluruh ulasan untuk satu platform — di-cache per platform.
+    Jauh lebih efisien daripada predict ulang setiap interaksi.
+    """
+    model, vectorizer, _ = get_model()
+    df = load_dataset()
+    df_sel = df[df['app_name'] == app_name]
+    reviews = df_sel['text'].astype(str).tolist()
+    return predict_sentiments(reviews, model, vectorizer)
 
 
 def predict_sentiments(reviews: list[str], model, vectorizer):
@@ -186,15 +200,8 @@ selected_app_label = st.selectbox(
 
 if selected_app_label:
     with st.spinner(f"Sedang merangkum ulasan {app_display_names[selected_app_label]}..."):
-        # Filter data
-        df_selected = df_full[df_full['app_name'] == selected_app_label]
-        
-        # Ambil sampel ulasan untuk dianalisis (misal 100 ulasan terbaru agar cepat)
-        # Jika data banyak, kita ambil sampel agar tidak lemot
-        sample_size = min(len(df_selected), 200)
-        reviews_to_analyze = df_selected['text'].astype(str).tail(sample_size).tolist()
-        
-        results = predict_sentiments(reviews_to_analyze, model, vectorizer)
+        # Predict seluruh ulasan platform — di-cache, jadi hanya dihitung sekali
+        results = get_predictions_cached(selected_app_label)
         
         if not results:
             st.warning("Gagal menganalisis ulasan. Coba pilih yang lain ya Bun.")
