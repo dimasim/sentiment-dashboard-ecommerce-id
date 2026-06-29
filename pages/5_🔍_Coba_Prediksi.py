@@ -84,7 +84,7 @@ if "history" in st.session_state and st.session_state["history"]:
         return "color: #c0392b; font-weight: bold"
 
     st.dataframe(
-        history_df.style.applymap(style_hasil, subset=["Hasil"]),
+        history_df.style.map(style_hasil, subset=["Hasil"]),
         use_container_width=True,
         hide_index=True,
     )

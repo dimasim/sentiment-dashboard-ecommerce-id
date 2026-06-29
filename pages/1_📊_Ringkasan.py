@@ -47,7 +47,7 @@ with chart_col1:
             score_counts,
             names="Skor",
             values="Jumlah",
-            color_discrete_sequence=px.colors.sequential.RdYlGn,
+            color_discrete_sequence=["#c0392b", "#e67e22", "#f1c40f", "#27ae60", "#1b873f"],
             hole=0.4,
         )
         fig_pie.update_traces(textposition="inside", textinfo="percent+label")

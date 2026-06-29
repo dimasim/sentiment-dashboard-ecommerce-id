@@ -120,7 +120,7 @@ def color_pct(val):
     return "color: #c0392b; font-weight: bold"
 
 st.dataframe(
-    display_df.style.applymap(color_pct, subset=["% Positif"]).format({"% Positif": "{:.2f}%", "Total": "{:,}", "Positif": "{:,}", "Negatif": "{:,}", "Netral": "{:,}"}),
+    display_df.style.map(color_pct, subset=["% Positif"]).format({"% Positif": "{:.2f}%", "Total": "{:,}", "Positif": "{:,}", "Negatif": "{:,}", "Netral": "{:,}"}),
     use_container_width=True,
     hide_index=True,
 )
