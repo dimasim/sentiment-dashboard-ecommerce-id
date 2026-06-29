@@ -23,8 +23,8 @@ from preprocessing import preprocess_pipeline
 # membingungkan pengguna awam di UI.
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
-MODEL_PATH = Path(__file__).parent / "model_svm_best.pkl"
-VECTORIZER_PATH = Path(__file__).parent / "vectorizer_tfidf.pkl"
+MODEL_PATH = Path(__file__).parent / "models" / "model_svm_best.pkl"
+VECTORIZER_PATH = Path(__file__).parent / "models" / "vectorizer_tfidf.pkl"
 
 # Data contoh ulasan marketplace (positif & negatif) untuk fallback training.
 # Mewakili pola bahasa gaul/informal khas ulasan e-commerce Indonesia.

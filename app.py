@@ -58,7 +58,7 @@ CUSTOM_STOPWORDS = [
 def load_dataset():
     """Memuat dataset ulasan dari file CSV."""
     try:
-        df = pd.read_csv("dataset_gabungan.csv")
+        df = pd.read_csv("data/dataset_gabungan.csv")
         # Pastikan kolom yang diperlukan ada
         if 'app_name' not in df.columns or 'text' not in df.columns:
             return pd.DataFrame(columns=['app_name', 'text'])
@@ -171,7 +171,7 @@ model, vectorizer, is_fallback = get_model()
 df_full = load_dataset()
 
 if df_full.empty:
-    st.error("❌ Waduh, data ulasan tidak ditemukan. Pastikan file `dataset_gabungan.csv` ada ya!")
+    st.error("❌ Waduh, data ulasan tidak ditemukan. Pastikan file `data/dataset_gabungan.csv` ada ya!")
     st.stop()
 
 # Ambil daftar marketplace unik dan rapikan namanya
